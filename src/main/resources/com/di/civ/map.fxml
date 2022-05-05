@@ -4,10 +4,18 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<GridPane fx:id="root" alignment="CENTER" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.di.civ.MapController">
+<BorderPane minHeight="200.0" minWidth="200.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.di.civ.MapController">
+    <center>
+    <GridPane fx:id="root" alignment="CENTER" xmlns="http://javafx.com/javafx/11.0.2">
     <padding>
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
     </padding>
+   <columnConstraints>
+      <ColumnConstraints />
+   </columnConstraints>
+   <rowConstraints>
+      <RowConstraints />
+   </rowConstraints>
     <!--
     <Label fx:id="cell00" GridPane.rowIndex="0" GridPane.columnIndex="0" text="0,0"/>
     <Label fx:id="cell10" GridPane.rowIndex="1" GridPane.columnIndex="0" text="1,0"/>
@@ -34,3 +42,12 @@
     </rowConstraints>
     -->
 </GridPane>
+    </center>
+   <right>
+       <VBox>
+      <Label fx:id="labelPosicionActual" text="Label" BorderPane.alignment="CENTER" />
+            <Button focusTraversable="false" mnemonicParsing="false" onMouseClicked="#botonCentrarPulsado" text="Button" />
+       </VBox>
+   </right>
+
+</BorderPane>

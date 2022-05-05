@@ -5,12 +5,15 @@ import javafx.geometry.Pos
 import javafx.scene.control.Label
 import javafx.scene.image.Image
 import javafx.scene.image.ImageView
+import javafx.scene.input.MouseEvent
 import javafx.scene.layout.GridPane
 import javafx.scene.layout.VBox
 import java.io.File
 
 class MapController {
 
+    lateinit var labelTerrenoSeleccionado: Label
+    lateinit var labelPosicionActual: Label
     lateinit var root : GridPane
     private val mapa = Mapa()
     private var subMapa = mapa.obtenerSubMapa()
@@ -52,12 +55,22 @@ class MapController {
                 val label = vBox.children[1] as Label
                 label.text = terreno.nombre
                 label.maxWidth = 80.0
+                label.minWidth = 80.0
                 label.style = "-fx-background-color: ${terreno.colorTexto};"
                 label.alignment = Pos.CENTER
+
+                vBox.setOnMouseClicked {
+                    actualizarTerrenoSeleccionado(terreno)
+                }
 
                 pos++
             }
         }
+        labelPosicionActual.text = String.format("Posición Actual: (%s,%s)", mapa.obtenerPosicionActual().fila, mapa.obtenerPosicionActual().columna)
+    }
+
+    fun actualizarTerrenoSeleccionado(terreno: Terreno) {
+        labelTerrenoSeleccionado.text = String.format("El Terreno seleccionado es: %s", terreno.nombre)
     }
 
     fun moverArriba() {
@@ -81,6 +94,11 @@ class MapController {
     fun moverDerecha() {
         println("moverDerecha")
         mapa.moverDerecha()
+        rellenarGirdPaneConMapa(mapa.obtenerSubMapa())
+    }
+
+    fun centerMap(mouseEvent: MouseEvent) {
+        mapa.cambiarPosicionActual(Mapa.Posicion(0,0))
         rellenarGirdPaneConMapa(mapa.obtenerSubMapa())
     }
 }

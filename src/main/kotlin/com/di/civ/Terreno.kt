@@ -12,7 +12,7 @@ data class Terreno(var nombre : String, val imagen  : String, val sePuedeAndarSo
         }
 
         fun crearColina(): Terreno {
-            return Terreno("Colina", "src\\main\\resources\\images\\colina.png", true, "#EF1B07C", "#9AF742" )
+            return Terreno("Colina", "src\\main\\resources\\images\\colina.png", true, "#505050", "#9AF742" )
         }
 
         fun crearBosque(): Terreno {

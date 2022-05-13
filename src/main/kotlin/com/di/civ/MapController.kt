@@ -5,18 +5,19 @@ import javafx.geometry.Pos
 import javafx.scene.control.Label
 import javafx.scene.image.Image
 import javafx.scene.image.ImageView
+import javafx.scene.input.MouseEvent
 import javafx.scene.layout.GridPane
 import javafx.scene.layout.VBox
 import java.io.File
 
 class MapController {
 
+    lateinit var labelTerrenoSeleccionado: Label
+    lateinit var labelPosicionActual: Label
     lateinit var root : GridPane
     private val mapa = Mapa()
-    private var filaActual = 1
-    private var columnaActual = 1
-    private var subMapa = mapa.obtenerSubMapa(filaActual, columnaActual, Configuracion.rangoVision)
-    lateinit var labelPosicionActual: Label
+    private var subMapa = mapa.obtenerSubMapa()
+
 
     fun initialize() {
         iniciarGridPane()
@@ -29,9 +30,8 @@ class MapController {
                 val vBox = VBox()
                 vBox.children.add(0, ImageView())
                 vBox.children.add(1, Label("fila $fila columna $columna"))
-                root.add(vBox, fila, columna)
+                root.add(vBox, columna, fila)
                 vBox.alignment = Pos.CENTER
-
             }
         root.hgap = 5.0
         root.vgap = 5.0
@@ -40,11 +40,11 @@ class MapController {
 
     private fun rellenarGirdPaneConMapa(subMapa: MutableList<MutableList<Terreno>>) {
         var pos = 0
-        subMapa.forEachIndexed { _, terrenos ->
-            terrenos.forEachIndexed { _, terreno ->
+        subMapa.forEach { terrenos ->
+            terrenos.forEach { terreno ->
                 val vBox = root.children[pos]
                 vBox as VBox
-                vBox.style = "-fx-background-color:"+terreno.color+" ;"
+                vBox.style = "-fx-background-color: ${terreno.colorTerreno};" // $terreno.color
 
                 val imageView = vBox.children[0] as ImageView
                 val f = File(terreno.imagen)
@@ -55,48 +55,50 @@ class MapController {
                 val label = vBox.children[1] as Label
                 label.text = terreno.nombre
                 label.maxWidth = 80.0
-                label.style = "-fx-background-color:"+terreno.color1+";"
+                label.minWidth = 80.0
+                label.style = "-fx-background-color: ${terreno.colorTexto};"
                 label.alignment = Pos.CENTER
+
+                vBox.setOnMouseClicked {
+                    actualizarTerrenoSeleccionado(terreno)
+                }
 
                 pos++
             }
         }
+        labelPosicionActual.text = String.format("Posición Actual: (%s,%s)", mapa.obtenerPosicionActual().fila, mapa.obtenerPosicionActual().columna)
     }
 
-    fun obtenerPosicionACtual() {
-        labelPosicionActual.text = "mi posicion es ("+filaActual+","+columnaActual+")"
-    }
-
-    fun botonCentrarPulsado() {
-        filaActual = 1
-        columnaActual = 1
-        subMapa = mapa.obtenerSubMapa(filaActual,columnaActual,Configuracion.rangoVision)
-        rellenarGirdPaneConMapa(subMapa)
-        obtenerPosicionACtual()
+    fun actualizarTerrenoSeleccionado(terreno: Terreno) {
+        labelTerrenoSeleccionado.text = String.format("El Terreno seleccionado es: %s", terreno.nombre)
     }
 
     fun moverArriba() {
-        columnaActual++
-        subMapa = mapa.obtenerSubMapa(filaActual,columnaActual,Configuracion.rangoVision)
-        rellenarGirdPaneConMapa(subMapa)
-        obtenerPosicionACtual()
+        println("moverArriba")
+        mapa.moverArriba()
+        rellenarGirdPaneConMapa(mapa.obtenerSubMapa())
     }
+
     fun moverAbajo() {
-        columnaActual--
-        subMapa = mapa.obtenerSubMapa(filaActual,columnaActual,Configuracion.rangoVision)
-        rellenarGirdPaneConMapa(subMapa)
-        obtenerPosicionACtual()
+        println("moverAbajo")
+        mapa.moverAbajo()
+        rellenarGirdPaneConMapa(mapa.obtenerSubMapa())
     }
-    fun moverDerecha() {
-        filaActual--
-        subMapa = mapa.obtenerSubMapa(filaActual,columnaActual,Configuracion.rangoVision)
-        rellenarGirdPaneConMapa(subMapa)
-        obtenerPosicionACtual()
-    }
+
     fun moverIzquierda() {
-        filaActual++
-        subMapa = mapa.obtenerSubMapa(filaActual,columnaActual,Configuracion.rangoVision)
-        rellenarGirdPaneConMapa(subMapa)
-        obtenerPosicionACtual()
+        println("moverIzquierda")
+        mapa.moverIzquierda()
+        rellenarGirdPaneConMapa(mapa.obtenerSubMapa())
+    }
+
+    fun moverDerecha() {
+        println("moverDerecha")
+        mapa.moverDerecha()
+        rellenarGirdPaneConMapa(mapa.obtenerSubMapa())
+    }
+
+    fun centerMap(mouseEvent: MouseEvent) {
+        mapa.cambiarPosicionActual(Mapa.Posicion(0,0))
+        rellenarGirdPaneConMapa(mapa.obtenerSubMapa())
     }
 }

@@ -14,26 +14,31 @@ class Civilization : Application() {
         stage.title = "Hello!"
         stage.scene = scene
         stage.show()
-        var mapController = fxmlLoader.getController<MapController>()
+        val mapController = fxmlLoader.getController<MapController>()
         scene.addEventHandler(KeyEvent.KEY_PRESSED) { keyPressed ->
             when (keyPressed.code) {
                 KeyCode.UP -> {
-                   mapController.moverArriba()
+                    println("UP")
+                    mapController.moverArriba()
                 }
                 KeyCode.DOWN -> {
+                    println("DOWN")
                     mapController.moverAbajo()
                 }
                 KeyCode.RIGHT -> {
+                    println("RIGHT")
                     mapController.moverDerecha()
                 }
                 KeyCode.LEFT -> {
+                    println("RIGHT")
                     mapController.moverIzquierda()
                 }
             }
         }
     }
-}
 
-fun main() {
-    Application.launch(Civilization::class.java)
+
+    fun main() {
+        Application.launch(Civilization::class.java)
+    }
 }
